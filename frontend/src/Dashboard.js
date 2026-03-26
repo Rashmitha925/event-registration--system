@@ -22,7 +22,7 @@ return <h3 className="text-center mt-5">Please login...</h3>;
 
 // FETCH EVENTS
 const fetchEvents = async ()=>{
-const res = await axios.get("http://localhost:5000/api/events");
+const res = await axios.get("https://event-registration-system-lsbf.onrender.com/api/events");
 setEvents(res.data);
 }
 
@@ -37,12 +37,12 @@ const addEvent = async ()=>{
 if(user.role !== "admin") return alert("Admin only");
 
 if(editId){
-await axios.put(`http://localhost:5000/api/events/${editId}`,{
+await axios.put(`https://event-registration-system-lsbf.onrender.com/api/events/${editId}`,{
 title,description,date
 });
 setEditId(null);
 }else{
-await axios.post("http://localhost:5000/api/events",
+await axios.post("https://event-registration-system-lsbf.onrender.com/api/events",
 {title,description,date,createdBy:user.name}
 );
 }
@@ -57,7 +57,7 @@ fetchEvents();
 
 // DELETE EVENT
 const deleteEvent = async(id)=>{
-await axios.delete(`http://localhost:5000/api/events/${id}`);
+await axios.delete(`https://event-registration-system-lsbf.onrender.com/api/events/${id}`);
 fetchEvents();
 }
 
@@ -74,7 +74,7 @@ setEditId(e._id);
 // REGISTER EVENT
 const registerEvent = async(id)=>{
 await axios.post(
-`http://localhost:5000/api/events/register/${id}`,
+`https://event-registration-system-lsbf.onrender.com/api/events/register/${id}`,
 {user:user.name}
 );
 fetchEvents();
