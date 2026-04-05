@@ -10,15 +10,26 @@ const nav = useNavigate();
 
 const login = async ()=>{
 try{
+
 const res = await axios.post(
 "https://event-registration-system-2-8mkg.onrender.com/api/auth/login",
-{email,password}
+{ email, password }
 );
 
-console.log(res.data);   // ADD THIS
+console.log(res.data); // check response
 
-localStorage.setItem("token",res.data.token);
-localStorage.setItem("user", JSON.stringify(res.data.user));
+// store token
+localStorage.setItem("token", res.data.token);
+
+// store user with role
+localStorage.setItem(
+"user",
+JSON.stringify({
+name: res.data.user.name,
+email: res.data.user.email,
+role: res.data.user.role
+})
+);
 
 nav("/dashboard");
 
