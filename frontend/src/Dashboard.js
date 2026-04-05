@@ -3,7 +3,8 @@ import AddEvent from "./components/AddEvent";
 import EventList from "./components/EventList";
 
 function Dashboard() {
-  let user = JSON.parse(localStorage.getItem("user"));
+
+  const user = JSON.parse(localStorage.getItem("user"));
 
   const logout = () => {
     localStorage.clear();
@@ -15,20 +16,22 @@ function Dashboard() {
 
       <div className="d-flex justify-content-between">
         <h2>Event Dashboard</h2>
-        <button className="btn btn-danger" onClick={logout}>
-          Logout
-        </button>
+        <button onClick={logout}>Logout</button>
       </div>
 
+      {/* ADMIN PANEL */}
       {user?.role === "admin" && (
         <>
+          <h3>Admin Panel</h3>
           <AddEvent />
           <EventList isAdmin={true} />
         </>
       )}
 
+      {/* USER PANEL */}
       {user?.role === "user" && (
         <>
+          <h3>User Panel</h3>
           <EventList isAdmin={false} />
         </>
       )}
