@@ -1,52 +1,50 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
-function EventList() {
-  const [events, setEvents] = useState([]);
+function AddEvent() {
 
-  const fetchEvents = async () => {
-    const res = await fetch("https://event-registration-system-2-8mkg.onrender.com");
-    const data = await res.json();
-    setEvents(data);
-  };
+  const [title,setTitle] = useState("");
+  const [date,setDate] = useState("");
 
-  useEffect(() => {
-    fetchEvents();
-  }, []);
+  const addEvent = () => {
 
-  const registerEvent = async (id) => {
-    const username = localStorage.getItem("username");
-    const email = localStorage.getItem("email");
+    const events = JSON.parse(localStorage.getItem("events")) || [];
 
-    await fetch(`https://event-registration-system-2-8mkg.onrender.com`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, email })
+    events.push({
+      title,
+      date,
+      participants:[]
     });
 
-    fetchEvents();
+    localStorage.setItem("events", JSON.stringify(events));
+
+    setTitle("");
+    setDate("");
+    window.location.reload();
   };
 
   return (
-    <div>
-      {events.map((e) => (
-        <div key={e._id} className="card">
-          <h3>{e.title}</h3>
-          <p>{e.description}</p>
-          <p>{e.date}</p>
-          <p>{e.location}</p>
+    <div className="card p-3 mt-3">
+      <h4>Add Event</h4>
 
-          <button onClick={() => registerEvent(e._id)}>
-            Register
-          </button>
+      <input
+        placeholder="Event title"
+        className="form-control my-2"
+        value={title}
+        onChange={(e)=>setTitle(e.target.value)}
+      />
 
-          <h4>Registered Users:</h4>
-          {e.registrations?.map((r, index) => (
-            <p key={index}>{r.username}</p>
-          ))}
-        </div>
-      ))}
+      <input
+        type="date"
+        className="form-control my-2"
+        value={date}
+        onChange={(e)=>setDate(e.target.value)}
+      />
+
+      <button onClick={addEvent}>
+        Add Event
+      </button>
     </div>
   );
 }
 
-export default EventList;
+export default AddEvent;

@@ -1,152 +1,113 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 
-function EventList({ isAdmin }) {
-  const [events, setEvents] = useState([]);
-  const [search, setSearch] = useState("");
-  const [editIndex, setEditIndex] = useState(null);
-  const [editTitle, setEditTitle] = useState("");
-  const [editDate, setEditDate] = useState("");
+function EventList({ isAdmin, search }) {
+
+  const [events,setEvents] = useState([]);
+  const [editIndex,setEditIndex] = useState(null);
+  const [title,setTitle] = useState("");
+  const [date,setDate] = useState("");
 
   const user = JSON.parse(localStorage.getItem("user"));
 
-  useEffect(() => {
-    const storedEvents = JSON.parse(localStorage.getItem("events")) || [];
-    setEvents(storedEvents);
-  }, []);
+  useEffect(()=>{
+    const stored = JSON.parse(localStorage.getItem("events")) || [];
+    setEvents(stored);
+  },[]);
 
-  // REGISTER EVENT (USER)
-  const registerEvent = (index) => {
-    let updated = [...events];
-
-    if (!updated[index].participants) {
-      updated[index].participants = [];
-    }
-
-    // avoid duplicate registration
-    if (!updated[index].participants.includes(user.name)) {
-      updated[index].participants.push(user.name);
-    }
-
-    localStorage.setItem("events", JSON.stringify(updated));
+  const deleteEvent = (index)=>{
+    const updated = [...events];
+    updated.splice(index,1);
+    localStorage.setItem("events",JSON.stringify(updated));
     setEvents(updated);
   };
 
-  // DELETE EVENT (ADMIN)
-  const deleteEvent = (index) => {
-    let updated = [...events];
-    updated.splice(index, 1);
-    localStorage.setItem("events", JSON.stringify(updated));
-    setEvents(updated);
+  const startEdit = (i)=>{
+    setEditIndex(i);
+    setTitle(events[i].title);
+    setDate(events[i].date);
   };
 
-  // START EDIT (ADMIN)
-  const startEdit = (index) => {
-    setEditIndex(index);
-    setEditTitle(events[index].title);
-    setEditDate(events[index].date);
-  };
+  const updateEvent = (i)=>{
+    const updated = [...events];
+    updated[i].title = title;
+    updated[i].date = date;
 
-  // SAVE UPDATE (ADMIN)
-  const saveEdit = (index) => {
-    let updated = [...events];
-    updated[index].title = editTitle;
-    updated[index].date = editDate;
-
-    localStorage.setItem("events", JSON.stringify(updated));
+    localStorage.setItem("events",JSON.stringify(updated));
     setEvents(updated);
     setEditIndex(null);
   };
 
-  // SEARCH
-  const filteredEvents = events.filter((e) =>
+  const registerEvent = (i)=>{
+    const updated = [...events];
+
+    if(!updated[i].participants.includes(user.name)){
+      updated[i].participants.push(user.name);
+    }
+
+    localStorage.setItem("events",JSON.stringify(updated));
+    setEvents(updated);
+  };
+
+  const filtered = events.filter(e =>
     e.title.toLowerCase().includes(search.toLowerCase())
   );
 
   return (
-    <div className="mt-3">
+    <div>
 
-      {/* SEARCH BAR */}
-      <input
-        type="text"
-        className="form-control mb-3"
-        placeholder="Search events..."
-        onChange={(e) => setSearch(e.target.value)}
-      />
+      {filtered.map((event,i)=>(
+        <div key={i} className="card p-3 my-2">
 
-      {filteredEvents.map((event, index) => (
-        <div key={index} className="card p-3 mt-2">
-
-          {/* EDIT MODE */}
-          {editIndex === index ? (
+          {editIndex === i ? (
             <>
               <input
-                className="form-control"
-                value={editTitle}
-                onChange={(e) => setEditTitle(e.target.value)}
+                value={title}
+                onChange={(e)=>setTitle(e.target.value)}
               />
 
               <input
                 type="date"
-                className="form-control mt-2"
-                value={editDate}
-                onChange={(e) => setEditDate(e.target.value)}
+                value={date}
+                onChange={(e)=>setDate(e.target.value)}
               />
 
-              <button
-                className="btn btn-success mt-2"
-                onClick={() => saveEdit(index)}
-              >
+              <button onClick={()=>updateEvent(i)}>
                 Save
               </button>
             </>
-          ) : (
+          ):(
             <>
-              <h5>{event.title}</h5>
+              <h4>{event.title}</h4>
               <p>{event.date}</p>
             </>
           )}
 
-          {/* USER REGISTER */}
           {!isAdmin && (
-            <button
-              className="btn btn-primary mt-2"
-              onClick={() => registerEvent(index)}
-            >
+            <button onClick={()=>registerEvent(i)}>
               Register
             </button>
           )}
 
-          {/* ADMIN CONTROLS */}
           {isAdmin && (
             <>
-              <button
-                className="btn btn-warning mt-2"
-                onClick={() => startEdit(index)}
-              >
+              <button onClick={()=>startEdit(i)}>
                 Update
               </button>
 
-              <button
-                className="btn btn-danger mt-2"
-                onClick={() => deleteEvent(index)}
-              >
+              <button onClick={()=>deleteEvent(i)}>
                 Delete
               </button>
 
-              <h6 className="mt-2">Participants:</h6>
-              {event.participants?.length > 0 ? (
-                <ul>
-                  {event.participants.map((p, i) => (
-                    <li key={i}>{p}</li>
-                  ))}
-                </ul>
-              ) : (
-                <p>No registrations</p>
-              )}
+              <h5>Participants:</h5>
+              {event.participants.map((p,index)=>(
+                <p key={index}>{p}</p>
+              ))}
             </>
           )}
+
         </div>
       ))}
+
     </div>
   );
 }

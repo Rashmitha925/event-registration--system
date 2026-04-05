@@ -1,10 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import AddEvent from "./components/AddEvent";
 import EventList from "./components/EventList";
 
 function Dashboard() {
-
   const user = JSON.parse(localStorage.getItem("user"));
+  const [search, setSearch] = useState("");
 
   const logout = () => {
     localStorage.clear();
@@ -19,20 +19,22 @@ function Dashboard() {
         <button onClick={logout}>Logout</button>
       </div>
 
-      {/* ADMIN PANEL */}
+      <input
+        placeholder="Search events..."
+        className="form-control my-3"
+        onChange={(e)=>setSearch(e.target.value)}
+      />
+
       {user?.role === "admin" && (
         <>
-          <h3>Admin Panel</h3>
           <AddEvent />
-          <EventList isAdmin={true} />
+          <EventList isAdmin={true} search={search}/>
         </>
       )}
 
-      {/* USER PANEL */}
       {user?.role === "user" && (
         <>
-          <h3>User Panel</h3>
-          <EventList isAdmin={false} />
+          <EventList isAdmin={false} search={search}/>
         </>
       )}
 
