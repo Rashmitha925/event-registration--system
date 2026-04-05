@@ -15,7 +15,7 @@ const nav = useNavigate();
 const register = async ()=>{
 try{
 await axios.post(
-"https://event-registration-system-lsbf.onrender.com/api/auth/register",
+"https://event-registration-system-2-8mkg.onrender.com/api/auth/register",
 {
 name,
 email,

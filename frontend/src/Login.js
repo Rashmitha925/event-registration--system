@@ -11,7 +11,7 @@ const nav = useNavigate();
 const login = async ()=>{
 try{
 const res = await axios.post(
-"https://event-registration-system-lsbf.onrender.com/api/auth/login",
+"https://event-registration-system-2-8mkg.onrender.com/api/auth/login",
 {email,password}
 );
 

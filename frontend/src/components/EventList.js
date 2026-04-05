@@ -4,7 +4,7 @@ function EventList() {
   const [events, setEvents] = useState([]);
 
   const fetchEvents = async () => {
-    const res = await fetch("http://localhost:5000/api/events");
+    const res = await fetch("https://event-registration-system-2-8mkg.onrender.com");
     const data = await res.json();
     setEvents(data);
   };
@@ -17,7 +17,7 @@ function EventList() {
     const username = localStorage.getItem("username");
     const email = localStorage.getItem("email");
 
-    await fetch(`http://localhost:5000/api/events/register/${id}`, {
+    await fetch(`https://event-registration-system-2-8mkg.onrender.com`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username, email })
