@@ -3,12 +3,13 @@ import AddEvent from "./components/AddEvent";
 import EventList from "./components/EventList";
 
 function Dashboard() {
+
   const user = JSON.parse(localStorage.getItem("user"));
-  const [search, setSearch] = useState("");
+  const [search,setSearch] = useState("");
 
   const logout = () => {
     localStorage.clear();
-    window.location = "/";
+    window.location="/";
   };
 
   return (
@@ -20,8 +21,8 @@ function Dashboard() {
       </div>
 
       <input
-        placeholder="Search events..."
         className="form-control my-3"
+        placeholder="Search events..."
         onChange={(e)=>setSearch(e.target.value)}
       />
 
@@ -33,9 +34,7 @@ function Dashboard() {
       )}
 
       {user?.role === "user" && (
-        <>
-          <EventList isAdmin={false} search={search}/>
-        </>
+        <EventList isAdmin={false} search={search}/>
       )}
 
     </div>
