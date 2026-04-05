@@ -2,3 +2,8 @@
 base= "frontend"
 command = "npm install && npm run build" 
 publish = "build" 
+
+[[rediredts]]
+from = "/*"
+to = "/index.html"
+status =200
